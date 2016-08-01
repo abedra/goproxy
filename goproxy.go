@@ -14,11 +14,20 @@ import (
 type Proxy struct {
 	target *url.URL
 	proxy  *httputil.ReverseProxy
+	cache  *LRU
 	log    *os.File
 }
 
 func (proxy *Proxy) handle(writer http.ResponseWriter, request *http.Request) {
 	request.Header.Set("X-GoProxy", "Success")
+
+	if _, ok := proxy.cache.Get(request.RemoteAddr); ok {
+		log.Printf("Cache HIT for %s", request.RemoteAddr)
+	} else {
+		log.Printf("Cache MISS for %s", request.RemoteAddr)
+		proxy.cache.Add(request.RemoteAddr, true)
+	}
+
 	proxy.proxy.ServeHTTP(writer, request)
 }
 
@@ -80,7 +89,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	proxy := &Proxy{target: url, proxy: httputil.NewSingleHostReverseProxy(url), log: logFile}
+	proxy := &Proxy{
+		target: url,
+		proxy:  httputil.NewSingleHostReverseProxy(url),
+		cache:  NewCache(0),
+		log:    logFile,
+	}
 
 	http.HandleFunc("/", proxy.handle)
 
