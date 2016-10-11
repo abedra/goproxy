@@ -57,6 +57,7 @@ func main() {
 	targetPtr := flag.String("target", "http://localhost:8080", "Proxy Target")
 	portPtr := flag.Int("port", 8888, "Proxy Port")
 	logPathPtr := flag.String("logdir", "logs", "Logfile Directory")
+	cacheSizePtr := flag.Int("cachesize", 0, "Sets the size of the cache")
 	flag.Parse()
 
 	if _, err := os.Stat(*logPathPtr); os.IsNotExist(err) {
@@ -92,7 +93,7 @@ func main() {
 	proxy := &Proxy{
 		target: url,
 		proxy:  httputil.NewSingleHostReverseProxy(url),
-		cache:  NewCache(0),
+		cache:  NewCache(*cacheSizePtr),
 		log:    logFile,
 	}
 

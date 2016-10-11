@@ -6,18 +6,19 @@ you just need to add your custom logic.
 
 # Getting Started
 
-goproxy has 3 configuration options:
+goproxy has 4 configuration options:
 
 ```
 target: The target server (must be a full address)
 port: The port you want to run goproxy on
 logdir: The path you want goproxy to write its logs to
+cachesize: The size of the internal cache (defaults to unbounded)
 ```
 
 For example:
 
 ```
-$ goproxy -target http://localhost:4567 -port 8080 -logdir logs
+$ goproxy -target http://localhost:4567 -port 8080 -logdir logs -cachesize 2
 ```
 
 # Working with goproxy
