@@ -4,6 +4,22 @@ This project is a template for a simple golang based reverse proxy
 server. It contains all the basics for a useful HTTP reverse proxy,
 you just need to add your custom logic.
 
+# Getting Started
+
+goproxy has 3 configuration options:
+
+```
+target: The target server (must be a full address)
+port: The port you want to run goproxy on
+logdir: The path you want goproxy to write its logs to
+```
+
+For example:
+
+```
+$ goproxy -target http://localhost:4567 -port 8080 -logdir logs
+```
+
 # Working with goproxy
 
 You can simply compile and run goproxy, but if you just want a reverse
